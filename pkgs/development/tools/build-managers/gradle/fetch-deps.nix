@@ -96,16 +96,19 @@ let
       nameVer = builtins.match "([^/]*)/([^/]*)(/SNAPSHOT)?(/.*)?" afterHash;
       artifactId = builtins.elemAt nameVer 0;
       version = builtins.elemAt nameVer 1;
+      versionComponents = lib.splitString "-" version;
       isSnapshot = builtins.elemAt nameVer 2 != null;
       cls = builtins.elemAt nameVer 3;
     in
     rec {
       inherit artifactId version isSnapshot;
       baseVer =
-        if !isSnapshot then
-          version
+        if isSnapshot && (lib.last versionComponents != "SNAPSHOT") then
+          builtins.concatStringsSep "-" (
+            lib.dropEnd 2 versionComponents ++ [ "SNAPSHOT" ]
+          )
         else
-          builtins.head (builtins.match "(.*)-([^-]*)-([^-]*)" version) + "-SNAPSHOT";
+          version;
       classifier = if cls == null then null else lib.removePrefix "/" cls;
       clsSuf = if classifier == null then "" else "-${classifier}";
     };

@@ -104,9 +104,7 @@ let
       inherit artifactId version isSnapshot;
       baseVer =
         if isSnapshot && (lib.last versionComponents != "SNAPSHOT") then
-          builtins.concatStringsSep "-" (
-            lib.dropEnd 2 versionComponents ++ [ "SNAPSHOT" ]
-          )
+          builtins.concatStringsSep "-" (lib.dropEnd 2 versionComponents ++ [ "SNAPSHOT" ])
         else
           version;
       classifier = if cls == null then null else lib.removePrefix "/" cls;

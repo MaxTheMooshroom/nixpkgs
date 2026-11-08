@@ -52,7 +52,7 @@
 
 let
   pname = "mongodb-compass";
-  version = "1.49.7";
+  version = "1.53.1";
 
   selectSystem =
     attrs:
@@ -67,9 +67,9 @@ let
       }
     }";
     hash = selectSystem {
-      x86_64-linux = "sha256-qd05VAGDDmB/CMea+/NSPpmdHnTNms1LttwaA1bhgaU=";
-      x86_64-darwin = "sha256-9gIqtPE1qAKHSGE49FxrpbvYGchJNBqPMiq/0hUNkjE=";
-      aarch64-darwin = "sha256-zlbXep67u9F+BSynYp4+czDbkW7/VCPV/JafghLf3Xs=";
+      x86_64-linux = "sha256-oPjZTbqr3oA9s0wJFEmcOqYykYxf8/02WyA/W134JSU=";
+      x86_64-darwin = "sha256-NQC/RGzW1aqbTksGVUJuD7HKymzKodGRfGEWrIn11dw=";
+      aarch64-darwin = "sha256-Aqvu1XiCMtBHPnfUmBLKUwwhrEg5KLjlChyK0wkEShs=";
     };
   };
 
@@ -121,13 +121,13 @@ in
 stdenv.mkDerivation (finalAttrs: {
   inherit pname version src;
 
-  buildInputs = lib.optionals stdenv.hostPlatform.isLinux [
-    dpkg
-    wrapGAppsHook3
-    patchelf
-  ];
-
-  nativeBuildInputs = lib.optionals stdenv.hostPlatform.isDarwin [ unzip ];
+  nativeBuildInputs =
+    lib.optionals stdenv.hostPlatform.isLinux [
+      dpkg
+      wrapGAppsHook3
+      patchelf
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isDarwin [ unzip ];
 
   dontUnpack = stdenv.hostPlatform.isLinux;
   dontFixup = stdenv.hostPlatform.isDarwin;
@@ -158,7 +158,8 @@ stdenv.mkDerivation (finalAttrs: {
       patchelf --set-rpath ${rpath}:$out/lib/mongodb-compass "$file" || true
     done
 
-    wrapGAppsHook $out/bin/mongodb-compass
+    gappsWrapperArgsHook
+    wrapGApp "$out/bin/mongodb-compass"
   '';
 
   installPhase = ''

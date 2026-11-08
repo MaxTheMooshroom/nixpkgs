@@ -3,6 +3,7 @@
   buildNpmPackage,
   fetchFromGitHub,
   fetchPypi,
+  fetchpatch,
   libredirect,
   nodejs,
   python3,
@@ -87,6 +88,52 @@ python.pkgs.buildPythonApplication rec {
     # Discover pretix.plugin entrypoints during build and add them into
     # INSTALLED_APPS, so that their static files are collected.
     ./plugin-build.patch
+
+    (fetchpatch {
+      name = "CVE-2026-101266.patch";
+      url = "https://github.com/pretix/pretix/commit/a86f6f295d1e02f8f228f00e0892b5c8d56c481e.patch";
+      hash = "sha256-bbQ/+Xq43nDABEuRy0RQojCS96l3+qjNdVeoD3c9+wc=";
+    })
+    (fetchpatch {
+      name = "CVE-2026-101267.patch";
+      url = "https://github.com/pretix/pretix/commit/afe87dcda1a25a8bded9e21dc55e817d6f23ad24.patch";
+      hash = "sha256-6rMJ4uEca0yHbxk5l0Zs//try4b9TOYc+ge++baJnoA=";
+    })
+    (fetchpatch {
+      name = "CVE-2026-101268.patch";
+      url = "https://github.com/pretix/pretix/commit/1b69eebbaa4cce7102c5e220fb1df47db34fa38b.patch";
+      hash = "sha256-f3KuKbGn236bli6Xli2c+EAqvx2eENknzDiZupbokIg=";
+    })
+    (fetchpatch {
+      name = "CVE-2026-101270.patch";
+      url = "https://github.com/pretix/pretix/commit/9a989f2eefccf97bb894469dbbc1d5b0a64331b8.patch";
+      hash = "sha256-uDTvZ3i2l7agEgBv30KlkDUxPApgy9L/o21RoSUDfhA=";
+    })
+    (fetchpatch {
+      name = "CVE-2026-101271.patch";
+      url = "https://github.com/pretix/pretix/commit/d5fe5b49df5ee08196be750467deda21917e2b50.patch";
+      hash = "sha256-2SwL3Ev+mznI7gl2WBdGs3CjUCcShc+yEPiUwxlKUYo=";
+    })
+    (fetchpatch {
+      name = "CVE-2026-101269.patch";
+      url = "https://github.com/pretix/pretix/commit/abeb615d3d093093668ebaaa0966301640b3a88e.patch";
+      hash = "sha256-glYhBPL6pVKYlFDmEoPQrrO2L2SxMQOZ3A1Q20uFiew=";
+    })
+    (fetchpatch {
+      name = "CVE-2026-101273.patch";
+      url = "https://github.com/pretix/pretix/commit/122f04019e8fcb1eae94139f6eb21899a36fe313.patch";
+      hash = "sha256-oUCSxA4QaFGvz7HqIA36+a/A/o1uijhyc4Y1+2zG9Lo=";
+    })
+    (fetchpatch {
+      name = "CVE-2026-101274.patch";
+      url = "https://github.com/pretix/pretix/commit/e7193f28845a9c624a9822edd2452f47ef028b10.patch";
+      hash = "sha256-rLZ+Nv6Myj/c/H3/PX2rQ6DMqmrA3r5C1Lz8In+maxo=";
+    })
+    (fetchpatch {
+      name = "CVE-2026-101272.patch";
+      url = "https://github.com/pretix/pretix/commit/eabfe9c2fab6ad61a8325d6a766324830fce43b6.patch";
+      hash = "sha256-YXetX9/kwV6qEbRjwqz5VPPkZWPaWESwpXcrdRC6MhA=";
+    })
   ];
 
   pythonRelaxDeps = [

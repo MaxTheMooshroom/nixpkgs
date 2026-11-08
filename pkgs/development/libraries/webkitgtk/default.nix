@@ -28,7 +28,6 @@
   libepoxy,
   libjxl,
   at-spi2-core,
-  cairo,
   expat,
   libxml2,
   libsoup_3,
@@ -58,6 +57,8 @@
   freetype,
   openssl,
   openxr-loader,
+  vulkan-headers,
+  vulkan-volk,
   sqlite,
   gst-plugins-base,
   gst-plugins-bad,
@@ -75,6 +76,8 @@
   withLibsecret ? true,
   systemdSupport ? lib.meta.availableOn clangStdenv.hostPlatform systemdLibs,
   testers,
+  webkitgtk_6_0,
+  directoryListingUpdater,
   fetchpatch,
 }:
 
@@ -85,7 +88,7 @@ in
 # https://webkitgtk.org/2024/10/04/webkitgtk-2.46.html recommends building with clang.
 clangStdenv.mkDerivation (finalAttrs: {
   pname = "webkitgtk";
-  version = "2.52.5";
+  version = "2.54.1";
   name = "webkitgtk-${finalAttrs.version}+abi=${abiVersion}";
 
   outputs = [
@@ -100,7 +103,7 @@ clangStdenv.mkDerivation (finalAttrs: {
 
   src = fetchurl {
     url = "https://webkitgtk.org/releases/webkitgtk-${finalAttrs.version}.tar.xz";
-    hash = "sha256-ilMamr0iFZNuioqRTAd7WGwCKLMdZS8gUoao7JDzNks=";
+    hash = "sha256-6gu7AtvbxZaHSk5601tmZFs+CiMr0OQIHeXtkusKOX0=";
   };
 
   patches = lib.optionals clangStdenv.hostPlatform.isLinux [
@@ -141,7 +144,6 @@ clangStdenv.mkDerivation (finalAttrs: {
 
   buildInputs = [
     at-spi2-core
-    cairo # required even when using skia
     enchant
     expat
     flite
@@ -201,6 +203,10 @@ clangStdenv.mkDerivation (finalAttrs: {
     librice
     # For ENABLE_WEBXR
     openxr-loader
+    # For USE_VULKAN
+    vulkan-volk
+    # https://bugs.webkit.org/show_bug.cgi?id=327027
+    vulkan-headers
   ]
   ++ lib.optionals withLibsecret [
     libsecret
@@ -257,7 +263,16 @@ clangStdenv.mkDerivation (finalAttrs: {
 
   requiredSystemFeatures = [ "big-parallel" ];
 
-  passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
+  passthru = {
+    tests = {
+      experimental = webkitgtk_6_0.override {
+        enableExperimental = true;
+        inherit gtk4;
+      };
+      pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
+    };
+    updateScript = directoryListingUpdater { };
+  };
 
   meta = {
     description = "Web content rendering engine, GTK port";

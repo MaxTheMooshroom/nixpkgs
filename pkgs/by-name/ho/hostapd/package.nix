@@ -2,6 +2,7 @@
   lib,
   stdenv,
   fetchurl,
+  fetchpatch,
   pkg-config,
   libnl,
   openssl,
@@ -26,11 +27,35 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   patches = [
-    (fetchurl {
+    (fetchpatch {
       # Note: fetchurl seems to be unhappy with openwrt git
       # server's URLs containing semicolons. Using the github mirror instead.
       url = "https://raw.githubusercontent.com/openwrt/openwrt/eefed841b05c3cd4c65a78b50ce0934d879e6acf/package/network/services/hostapd/patches/300-noscan.patch";
       sha256 = "08p5frxhpq1rp2nczkscapwwl8g9nc4fazhjpxic5bcbssc3sb00";
+    })
+
+    # Security advisory 2026-1 patches for hostapd 2.11.
+    # Patches 2,3 and 5 are omitted here as they are exclusive to wpa_supplicant
+    # Details: https://w1.fi/security/2026-1/
+    (fetchpatch {
+      url = "https://w1.fi/security/2026-1/0001-AP-MLD-Fix-link-ID-validation-in-Basic-MLE-parsing.patch";
+      hash = "sha256-mi4n9kR8CKwwIr1bBjmTZDwM3ohc+E3ITT9z8FwDFQI=";
+    })
+    (fetchpatch {
+      url = "https://w1.fi/security/2026-1/0004-AP-MLD-Verify-AP-MLD-link-ID-validity-before-updatin.patch";
+      hash = "sha256-Kw1xJUpVrZofPlHRzjNm/sVqkEyww342nL1g/BncX1U=";
+    })
+
+    # CVE-2025-24912: https://jvn.jp/en/jp/JVN19358384/
+    (fetchpatch {
+      name = "CVE-2025-24912-1.patch";
+      url = "https://w1.fi/cgit/hostap/patch/?id=726432d7622cc0088ac353d073b59628b590ea44";
+      hash = "sha256-C1V+WiUnmQwAZcJdbZluOejv3fSu7wmS24OeBjply/o=";
+    })
+    (fetchpatch {
+      name = "CVE-2025-24912-2.patch";
+      url = "https://w1.fi/cgit/hostap/patch/?id=339a334551ca911187cc870f4f97ef08e11db109";
+      hash = "sha256-8NtSLj5ASnNZ9A2MdiSYoa1Fv+t/vmTX1JinfA/bI9Y=";
     })
   ];
 

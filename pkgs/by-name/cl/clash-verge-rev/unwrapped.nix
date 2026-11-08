@@ -2,6 +2,7 @@
   pname,
   version,
   src,
+  cargoPatches,
   meta,
 
   pnpm-hash,
@@ -13,7 +14,7 @@
   moreutils,
   nodejs,
   pkg-config,
-  pnpm_10,
+  pnpm_10_latest,
   fetchPnpmDeps,
   pnpmConfigHook,
 
@@ -26,7 +27,12 @@
   webkitgtk_4_1,
 }:
 rustPlatform.buildRustPackage {
-  inherit version src meta;
+  inherit
+    version
+    src
+    meta
+    cargoPatches
+    ;
   pname = "${pname}-unwrapped";
 
   cargoHash = vendor-hash;
@@ -37,7 +43,7 @@ rustPlatform.buildRustPackage {
       version
       src
       ;
-    pnpm = pnpm_10;
+    pnpm = pnpm_10_latest;
     fetcherVersion = 4;
     hash = pnpm-hash;
   };
@@ -87,7 +93,7 @@ rustPlatform.buildRustPackage {
     nodejs
     pkg-config
     pnpmConfigHook
-    pnpm_10
+    pnpm_10_latest
   ];
 
   buildInputs = [

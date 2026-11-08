@@ -18,18 +18,18 @@
 # files.
 
 let
-  version = "2.8.3";
-  tag = "R_${lib.replaceStrings [ "." ] [ "_" ] version}";
+  tagFor = version: "R_${lib.replaceStrings [ "." ] [ "_" ] version}";
 in
+
 stdenv.mkDerivation (finalAttrs: {
   pname = "expat";
-  inherit version;
+  version = "2.9.0";
 
   src = fetchurl {
     url =
       with finalAttrs;
-      "https://github.com/libexpat/libexpat/releases/download/${tag}/${pname}-${version}.tar.xz";
-    hash = "sha256-9iVt+QyQZ3PTRNoIRAK30+TyLtQbGlnJiQmKg9PqDIU=";
+      "https://github.com/libexpat/libexpat/releases/download/${tagFor version}/${pname}-${version}.tar.xz";
+    hash = "sha256-HmNxhizDGZmzaMO4m0mZTwZ34bq18bK4WuN0H12AMFE=";
   };
 
   strictDeps = true;
@@ -73,7 +73,7 @@ stdenv.mkDerivation (finalAttrs: {
   };
 
   meta = {
-    changelog = "https://github.com/libexpat/libexpat/blob/${tag}/expat/Changes";
+    changelog = "https://github.com/libexpat/libexpat/blob/${tagFor finalAttrs.version}/expat/Changes";
     homepage = "https://libexpat.github.io/";
     description = "Stream-oriented XML parser library written in C";
     mainProgram = "xmlwf";

@@ -289,6 +289,10 @@ with lib.maintainers;
     github = "freedesktop";
   };
 
+  gaming = {
+    github = "gaming";
+  };
+
   gcc = {
     members = [
       vcunat
@@ -322,13 +326,7 @@ with lib.maintainers;
   };
 
   gnome-circle = {
-    members = [
-      aleksana
-      getchoo
-      michaelgrahamevans
-    ];
-    scope = "Maintain GNOME Circle applications.";
-    shortName = "GNOME Circle";
+    github = "gnome-circle";
   };
 
   golang = {
@@ -598,9 +596,7 @@ with lib.maintainers;
   };
 
   node = {
-    members = [ winter ];
-    scope = "Maintain Node.js runtimes and build tooling.";
-    shortName = "Node.js";
+    github = "node";
     enableFeatureFreezePing = true;
   };
 

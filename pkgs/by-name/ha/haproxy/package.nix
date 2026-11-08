@@ -5,6 +5,7 @@
   sslLibrary ? "openssl",
   stdenv,
   lib,
+  fetchpatch,
   fetchurl,
   nixosTests,
   zlib,
@@ -33,11 +34,11 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "haproxy";
-  version = "3.3.11";
+  version = "3.3.17";
 
   src = fetchurl {
     url = "https://www.haproxy.org/download/${lib.versions.majorMinor finalAttrs.version}/src/haproxy-${finalAttrs.version}.tar.gz";
-    hash = "sha256-ywGFCNBymseyaGlEqKk37a3bB0ThDNEFfdZQFQzcKD4=";
+    hash = "sha256-zyIeGOHS2BVcQEhbQ4mvTHvN/HdNgG3POR+dJH5MG2M=";
   };
 
   buildInputs = [

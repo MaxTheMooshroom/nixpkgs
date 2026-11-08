@@ -3,6 +3,7 @@
   stdenv,
   fetchFromGitHub,
   fetchPnpmDeps,
+  nix-update-script,
 
   # build
   brotli,
@@ -10,7 +11,7 @@
   fd,
   jq,
   pnpmConfigHook,
-  pnpm_10,
+  pnpm_10_latest,
   which,
 
   # runtime
@@ -21,7 +22,7 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "peertube";
-  version = "8.2.2";
+  version = "8.3.2";
 
   __structuredAttrs = true;
   strictDeps = true;
@@ -30,7 +31,7 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "Chocobozzz";
     repo = "PeerTube";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-huyuaCWJ3w1KHCcQFjH2ZcofPjqwjLpLt+dg6auD/dQ=";
+    hash = "sha256-x41ngH8fiuMm0xG/YP+qRQRWJ9bGd5vFae6aoK3j6qk=";
   };
 
   outputs = [
@@ -41,9 +42,9 @@ stdenv.mkDerivation (finalAttrs: {
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
-    pnpm = pnpm_10;
+    pnpm = pnpm_10_latest;
     fetcherVersion = 3;
-    hash = "sha256-qrx8JtIAmn0JEsFwptrHlOL0IaYPJPLzjuDWNs7XFfc=";
+    hash = "sha256-nGmDbJ+2ChGccC5cGJuG/Cbc/QVqH0t0S9/M/hbGY8A=";
   };
 
   nativeBuildInputs = [
@@ -51,7 +52,7 @@ stdenv.mkDerivation (finalAttrs: {
     fd
     jq
     pnpmConfigHook
-    pnpm_10
+    pnpm_10_latest
     nodejs_24
     which
   ];
@@ -150,6 +151,7 @@ stdenv.mkDerivation (finalAttrs: {
   passthru = {
     nodejs = nodejs_24;
     tests.peertube = nixosTests.peertube;
+    updateScript = nix-update-script { };
   };
 
   meta = {
@@ -170,6 +172,7 @@ stdenv.mkDerivation (finalAttrs: {
     '';
     license = lib.licenses.agpl3Plus;
     homepage = "https://joinpeertube.org/";
+    changelog = "https://github.com/Chocobozzz/PeerTube/blob/${finalAttrs.src.rev}/CHANGELOG.md";
     platforms = [
       "x86_64-linux"
       "aarch64-linux"

@@ -272,7 +272,15 @@ let
                   If it does, write the ignore patterns to the rest API.
                 */
                 + lib.optionalString ((conf_type == "dirs") && (new_cfg.ignorePatterns != null)) ''
-                  curl -d '{"ignore": ${builtins.toJSON new_cfg.ignorePatterns}}' -X POST ${s.ignoreAddress}?folder=${lib.strings.escapeURL new_cfg.id}
+                  curl -d ${
+                    lib.pipe new_cfg.ignorePatterns [
+                      (patterns: {
+                        ignore = patterns;
+                      })
+                      builtins.toJSON
+                      lib.escapeShellArg
+                    ]
+                  } -X POST ${s.ignoreAddress}?folder=${lib.strings.escapeURL new_cfg.id}
                 ''
               ))
               (lib.concatStringsSep "\n")
@@ -1036,7 +1044,7 @@ in
       };
       syncthing-init = mkIf (cleanedConfig != { }) {
         description = "Syncthing configuration updater";
-        requisite = [ "syncthing.service" ];
+        requires = [ "syncthing.service" ];
         after = [ "syncthing.service" ];
         wantedBy = [ "multi-user.target" ];
 

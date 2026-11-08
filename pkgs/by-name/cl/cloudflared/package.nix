@@ -1,24 +1,24 @@
 {
   lib,
   stdenv,
-  buildGoModule,
+  buildGo127Module,
   fetchFromGitHub,
   callPackage,
   gitUpdater,
 }:
 
-buildGoModule (finalAttrs: {
+buildGo127Module (finalAttrs: {
   pname = "cloudflared";
-  version = "2026.5.2";
+  version = "2026.10.7";
 
   src = fetchFromGitHub {
     owner = "cloudflare";
     repo = "cloudflared";
     tag = finalAttrs.version;
-    hash = "sha256-3rMA+DsyC1/ycscL4VfSCS8fZcJzMdDUw8zgmmUhRyQ=";
+    hash = "sha256-qyGcPCYaa4UT8ws5sUW+SXCp8QWbVniB4QFR8gGE0ds=";
   };
 
-  vendorHash = null;
+  vendorHash = "sha256-ah+kI+bWIZqsi9U+AJtWME9rfjTr6QpiLQy0RXNlDzc=";
 
   ldflags = [
     "-s"
@@ -33,7 +33,7 @@ buildGoModule (finalAttrs: {
 
     # Workaround for: protocol_test.go:11:
     #   lookup protocol-v2.argotunnel.com on [::1]:53: read udp [::1]:51876->[::1]:53: read: connection refused
-    substituteInPlace "edgediscovery/protocol_test.go" \
+    substituteInPlace "connection/protocol_test.go" \
       --replace-warn "TestProtocolPercentage" "SkipProtocolPercentage"
 
     # Workaround for: origin_icmp_proxy_test.go:46:

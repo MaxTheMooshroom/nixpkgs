@@ -20,11 +20,12 @@
   gi-docgen,
   brotli,
   libnghttp2,
+  zstd,
 }:
 
 stdenv.mkDerivation rec {
   pname = "libsoup";
-  version = "3.6.6";
+  version = "3.8.0";
 
   outputs = [
     "out"
@@ -34,7 +35,7 @@ stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "mirror://gnome/sources/${pname}/${lib.versions.majorMinor version}/${pname}-${version}.tar.xz";
-    hash = "sha256-Ue0K4G+dWkD0Af9Fni5fZS+aUQt3MOE1nuZtFNSHJ0A=";
+    hash = "sha256-u/CPo+A6iMMaPSeg2Hy0IulJDy0I4UkhEQPfbWOKIjg=";
   };
 
   depsBuildBuild = [
@@ -60,6 +61,7 @@ stdenv.mkDerivation rec {
     glib.out
     brotli
     libnghttp2
+    zstd
   ]
   ++ lib.optionals stdenv.hostPlatform.isLinux [
     libsysprof-capture

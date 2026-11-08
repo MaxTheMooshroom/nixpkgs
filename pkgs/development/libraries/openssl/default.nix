@@ -444,8 +444,8 @@ in
   };
 
   openssl_3 = common {
-    version = "3.0.21";
-    hash = "sha256-YX4pr45CH0ZklISkk35IxoXkf0ZIgWfJgviLxOwdUi8=";
+    version = "3.0.22";
+    hash = "sha256-Z+vKflDRc4MCgEVIZlNJIZW4PblfhVhwlwG7R7XB74E=";
 
     patches = [
       # Support for NIX_SSL_CERT_FILE, motivation:
@@ -470,12 +470,15 @@ in
 
     extraMeta = {
       license = lib.licenses.asl20;
+      knownVulnerabilities = [
+        "OpenSSL 3.0 reached its end of life on 2026/09/07"
+      ];
     };
   };
 
   openssl_3_5 = common {
-    version = "3.5.7";
-    hash = "sha256-qMDSilKcpID582z1eS4s0hmEVSo8jkqhGiSqMa6smOg=";
+    version = "3.5.9";
+    hash = "sha256-YD9WAuLu8A13+9Qp003NWCK7MBdXobyc2yTGcPHrhZo=";
 
     patches = [
       # Support for NIX_SSL_CERT_FILE, motivation:
@@ -506,8 +509,8 @@ in
   };
 
   openssl_3_6 = common {
-    version = "3.6.3";
-    hash = "sha256-JDqGZJz28j7rai/yRW4J5dd92QGKVNPZawxr3Wumx/E=";
+    version = "3.6.5";
+    hash = "sha256-ohV8KDDv3sN4iTmwDJsGODBtPwu7dtxIMu5QO7OX35g=";
 
     patches = [
       # Support for NIX_SSL_CERT_FILE, motivation:
@@ -535,8 +538,37 @@ in
   };
 
   openssl_4_0 = common {
-    version = "4.0.1";
-    hash = "sha256-LbPzoNbqS1nh8JSs4sjNU23/uHzcOQhMWvoeb3833Qk=";
+    version = "4.0.3";
+    hash = "sha256-MltcgGFnwTtAsf/q3+AkgZfADszEzxI+weKNLS/SFtk=";
+
+    patches = [
+      # Support for NIX_SSL_CERT_FILE, motivation:
+      # https://github.com/NixOS/nixpkgs/commit/942dbf89c6120cb5b52fb2ab456855d1fbf2994e
+      ./3.0/nix-ssl-cert-file.patch
+
+      # openssl will only compile in KTLS if the current kernel supports it.
+      # This patch disables build-time detection.
+      ./3.0/openssl-disable-kernel-detection.patch
+
+      # Look up SSL certificates in /etc rather than the immutable installation directory
+      (
+        if stdenv.hostPlatform.isDarwin then
+          ./3.5/use-etc-ssl-certs-darwin.patch
+        else
+          ./3.5/use-etc-ssl-certs.patch
+      )
+    ];
+
+    withDocs = true;
+
+    extraMeta = {
+      license = lib.licenses.asl20;
+    };
+  };
+
+  openssl_4_1 = common {
+    version = "4.1.0";
+    hash = "sha256-UMF7r1TLAI9s5C1Q3rSygFChqtcRY2yr1LJBx+kMwv0=";
 
     patches = [
       # Support for NIX_SSL_CERT_FILE, motivation:
